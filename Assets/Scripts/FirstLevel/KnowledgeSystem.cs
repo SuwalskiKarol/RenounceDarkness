@@ -1,112 +1,4 @@
-﻿/*  							NOTATKI
- *
- *
- *
-		(http://staff.elka.pw.edu.pl/~pcichosz/um/wyklad/wyklad12/wyklad12.html    < wzory, schematy i inne matematyczne pierdy RL>)
-		
-				PROCES DECYZYJNY MARKOWA
-MDP = <X, A, q(phi), a(delta)> (doświadczenie)
-X = skończony zbiór stanów
-A = skończony zbiór akcji
-q = funkcja nagrody(na wyjście: zmienna losowa (r) oznaczająca nagrodę otrzymywaną po wykonaniu akcji a  w stanie x)
-a = funkcja przejścia stanów(na wyjście: zmienna losowa oznaczająca następny stan po wykonaniu akcji a w stanie x)(strategia)
-
-Własność Markowa :
-q i a nie zależą od historii. W każdym kroku nagroda i następny stan zależą (probabilistycznie) tylko od aktualnego stanu i akcji.
-
-Uczenie nieindukcyjne. Brak dużej liczby przykładów, brak nadzoru, brak uczenia wiedzy deklaratywnej.
-Uczenie się wiedzy proceduralnej(umiejętności?). 
-
-
-STRATEGIA - wybieranie akcji
-Strategia optymalna - każda strategia, dla której nie istnieje strategia od niej lepsza.(każda strategia maksymalizująca wartość każdego stanu.)
-strategia zachłanna - null;
-
-
-Podstawą uczenia się ze wzmocnieniem jest uczenie się funkcji wartości lub funkcji wartości akcji BEZ ZNAJOMOŚCI ŚRODOWISKA. 
-Większość wykorzystywanych w tym celu algorytmów opiera się na METODACH RÓŻNIC CZASOWYCH (temporal differences, TD).
-<na końcu pliku>
-ALGORYTM TD<podstawa uczenia strategii, inne algorytmy są rozbudowanie tego>
-
-
-------> UCZENIE SIE STRATEGII<------------
-Celem uczenia się ze wzmocnieniem jest nauczenie się strategii optymalnej (lub strategii dobrze przybliżającej strategię optymalną), 
-zaś uczenie się funkcji wartości może być jedynie środkiem do tego celu. 
-
-ALGORYTMY:
-AHC - null (podobno rzadko używany, trudniejszy do zrozumienia teoretycznie niz q-learning. nie czytam);
-
-
-Q-LEARNING
-- uczy się optymalnej funkcji wartości akcji, tak aby móc uzyskać strategię optymalną jako zachłanną względem niej.
- tablica 2 < http://staff.elka.pw.edu.pl/~pcichosz/um/wyklad/wyklad13/wyklad13.html> 
-
-Wartości Q wyznaczają oczywiście pośrednio strategię (zachłanną), 
-jednak w przeciwieństwie do algorytmu AHC dla procesu uczenia się nie wymaga się,
-aby akcje były w kolejnych krokach wybierane zgodnie z tą strategią (choćby w sensie zgodności probabilistycznej), 
-w związku z czym Q-learning należy do kategorii algorytmów OFF-POLICY (może posługiwać się inną strategią, niż ta, której się uczy). 
-<MONTE-CARLO poczytac>
-
-
-w każdej chwili w każdym stanie każda akcja może zostać wybrana do wykonania z pewnym niezerowym prawdopodobieństwem 
-(inaczej mówiąc, w każdym stanie każda akcja będzie wykonana nieskończenie wiele razy, jeśli algorytm działa nieskończenie długo).
-
-Dostateczna eksploracja jest jednym z warunków zbieżności algorytmu Q-learning.
-
-WYBÓR AKCJI
-
-Eksploracja a eksploatacja - wymiana między działaniem w celu pozyskania wiedzy a działaniem w celu pozyskania nagród. 
-Jest oczywiste, że oczekujemy od ucznia poprawy działania (czyli zwiększania dochodów) w trakcie uczenia się, a więc eksploatacji. 
-Z drugiej strony, jeśli jego aktualna strategia nie jest optymalna, to musi on poznać (i docenić) efekty innych akcji, niż wynikające z tej strategii, a więc eksplorować. 
-
--strategia zachłanna-null
--strategia oparta na rozkladzie boltzmanna - null
--strategie licznikowe - null;
-
-ALGORYTM UCB
-<https://jeremykun.com/2013/10/28/optimism-in-the-face-of-uncertainty-the-ucb1-algorithm/>
-
-UCB korzysta z badań nad problemem z teorii gier – MAB (ang. Multi-Armed Bandit). W problemie
-MAB rozważa się maszynę hazardową wyposażoną w N ramion. W każdym kroku, gracz
-może wybrać jedno z N ramion urządzenia. Celem gracza jest maksymalizacja nagrody. 
-
-
-REPREZENTACJA FUNKCJI; NULL
-
-
---------------------------------------------(info bonusowe)----------------------------------------------------------------------------------
-PROGRAMOWANIE DYNAMICZNE(Bellman)	
-Dla dowolnego procesu decyzyjnego Markowa istnieje przynajmniej jedna (stacjonarna, deterministyczna) strategia optymalna. 
-Każdej strategii optymalnej odpowiada ta sama optymalna funkcja wartości i optymalna funkcja wartości akcji. 
-Metody programowania dynamicznego pozwalają na wyznaczenie dowolnej z tych funkcji pod warunkiem znajomości  funkcji przejścia i wzmocnienia.
-
-Wartościowanie strategii(równianie Bellmana. Tablica 4, 5)
-
-
-wyznaczanie strategi optymalnej
-
-Istnieją dwa warianty metod programowania dynamicznego do wyznaczania strategii optymalnych. 
-Pierwszy z nich, nazywany iteracją strategii, generuje ciąg strategii, w którym każda kolejna strategia jest lepsza od następnej (lub obie są optymalne). 
-Drugi, nazywany iteracją wartości, oblicza optymalną funkcję wartości (lub wartości akcji) za pomocą stosowania równania optymalności Bellmana jako reguły aktualizacji.
-(tablica 6,7)
-
-porównanie uczenie ze wzmocnieniem a programowanie dynamiczne (str 27)
-
--dynamiczne - wymagana znajomość funcji przejścia, RL- funkcja przejscia jest nieznana, wykorzystuje faktycznie zaobserwowane nagrody i przejścia stanów.
--programowanie dynamiczne opiera się na wyczerpującym przeglądaniu całej przestrzeni stanów i akcji, podczas uczenie się ze wzmocnieniem wykorzystuje faktyczne trajektorie,
--programowanie dynamiczne prowadzi do obliczenia pełnej strategii optymalnej, 
-podczas gdy uczenie się ze wzmocnieniem ma w gruncie rzeczy na celu działanie (w przybliżeniu) optymalne, 
-które może być oparte na częściowej strategii (nie jest konieczne nauczenie się optymalnej strategii dla stanów, które nie występują w trakcie faktycznego działania ucznia).
-
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-*/
-
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Scripts.FirstLevel;
@@ -180,18 +72,18 @@ namespace Scripts.FirstLevel
 
         public void UtilityAnalyze(GameObject player, GameObject npc)
         {
-            float PlayerSufferDamage = player.GetComponent<Player>().DamageTaken;
+            float PlayerSufferDamage = player.GetComponent<Player>().damageTaken;
             float NormalizedPlayerSufferDamage = PlayerSufferDamage /
                 (player.GetComponent<Player>().HP + PlayerSufferDamage);
 
-            float EnemySufferDamage = npc.GetComponent<Monster>().DamageTaken;
+            float EnemySufferDamage = npc.GetComponent<Monster>().damageTaken;
             float NormalizedEnemySufferDamage = EnemySufferDamage /
                 (npc.GetComponent<Monster>().HP + EnemySufferDamage);
 
             Reward = NormalizedPlayerSufferDamage - NormalizedEnemySufferDamage;
 
-            player.GetComponent<Player>().DamageTaken = 0;
-            npc.GetComponent<Monster>().DamageTaken = 0;
+            player.GetComponent<Player>().damageTaken = 0;
+            npc.GetComponent<Monster>().damageTaken = 0;
         }
     }
 

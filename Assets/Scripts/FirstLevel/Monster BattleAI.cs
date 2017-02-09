@@ -16,7 +16,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Scripts.FirstLevel;
-public class BattleRoarState : FiniteStateMachineSystem {
+namespace Scripts.FirstLevel
+{
+    public class BattleRoarState : FiniteStateMachineSystem {
 
 	private GameObject CurPlayer;
 	private GameObject CurNpc;
@@ -60,7 +62,7 @@ public class BattleRoarState : FiniteStateMachineSystem {
 	public override void Reason(GameObject player, GameObject npc){
 		float dist = Vector3.Distance (player.transform.position, npc.transform.position);
 		if (anim.GetCurrentAnimatorStateInfo(0).IsName("creature1roar") && anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 1.0) {
-			if (dist < npc.GetComponent<Monster> ().AttackDistance) {
+			if (dist < npc.GetComponent<Monster> ().attackDistance) {
 				MDPQstate.EndState.StateAnalyze (CurPlayer, CurNpc);
 				npc.GetComponent<Monster> ().SetTransition (Transition.Attack);
 				Debug.Log ("roar.reason.attack");
@@ -68,12 +70,12 @@ public class BattleRoarState : FiniteStateMachineSystem {
 				return;
 			}
 
-			if (dist > npc.GetComponent<Monster> ().FireBallDistance) {
+			if (dist > npc.GetComponent<Monster> ().fireBallDistance) {
 				npc.GetComponent<Monster> ().SetTransition (Transition.FarAway);
 				Debug.Log ("roar.reason.faraway");
 				return;
 			}
-			if(dist > npc.GetComponent<Monster>().AttackDistance && dist < npc.GetComponent<Monster>().FireBallDistance){
+			if(dist > npc.GetComponent<Monster>().attackDistance && dist < npc.GetComponent<Monster>().fireBallDistance){
 				MDPQstate.EndState.StateAnalyze (CurPlayer, CurNpc);
 				npc.GetComponent<Monster> ().SetTransition (Transition.Falling);
 				Debug.Log ("roar.reason.falling");
@@ -160,23 +162,23 @@ public class BattleAttackState : FiniteStateMachineSystem
 		int CurHealth = npc.GetComponent<Monster> ().HP;
 
 		if (anim.GetCurrentAnimatorStateInfo (0).IsName ("creature1Attack2") && anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 1.0 && Attack == false) {
-			if (CurHealth > npc.GetComponent<Monster> ().RetreatHealth && dist < npc.GetComponent<Monster> ().AttackDistance) {
+			if (CurHealth > npc.GetComponent<Monster> ().retreatHealth && dist < npc.GetComponent<Monster> ().attackDistance) {
 				npc.GetComponent<Monster> ().SetTransition (Transition.Attack);
 				Debug.Log ("attack.reason.attack");
 				return;
 			}
-			if (CurHealth > npc.GetComponent<Monster> ().RetreatHealth && dist > npc.GetComponent<Monster> ().FireBallDistance) {
+			if (CurHealth > npc.GetComponent<Monster> ().retreatHealth && dist > npc.GetComponent<Monster> ().fireBallDistance) {
 				npc.GetComponent<Monster> ().SetTransition (Transition.FarAway);
 				Debug.Log ("attack.reason.faraway");
 				return;
 			}
 
-			if ( CurHealth > npc.GetComponent<Monster> ().RetreatHealth && dist > npc.GetComponent<Monster> ().AttackDistance && dist < npc.GetComponent<Monster> ().FireBallDistance) {
+			if ( CurHealth > npc.GetComponent<Monster> ().retreatHealth && dist > npc.GetComponent<Monster> ().attackDistance && dist < npc.GetComponent<Monster> ().fireBallDistance) {
 				npc.GetComponent<Monster> ().SetTransition (Transition.Falling);
 				Debug.Log ("attack.reason.falling");
 				return;
 			}
-			if (CurHealth < npc.GetComponent<Monster> ().RetreatHealth) {
+			if (CurHealth < npc.GetComponent<Monster> ().retreatHealth) {
 				npc.GetComponent<Monster> ().SetTransition (Transition.LowHealth);
 				Debug.Log ("attack.reason.lowhealth");
 				return;
@@ -266,7 +268,7 @@ public class BattleRunState : FiniteStateMachineSystem
 	{
 		float dist = Vector3.Distance(player.transform.position, npc.transform.position);
 
-		if(dist < npc.GetComponent<Monster>().AttackDistance)
+		if(dist < npc.GetComponent<Monster>().attackDistance)
 		{
 			MDPQstate.EndState.StateAnalyze(CurPlayer, CurNpc);
 			npc.GetComponent<Monster>().SetTransition(Transition.Attack);
@@ -274,7 +276,7 @@ public class BattleRunState : FiniteStateMachineSystem
 			return;
 		}
 
-		if(dist > npc.GetComponent<Monster>().AttackDistance && dist < npc.GetComponent<Monster>().FireBallDistance)
+		if(dist > npc.GetComponent<Monster>().attackDistance && dist < npc.GetComponent<Monster>().fireBallDistance)
 		{
 			MDPQstate.EndState.StateAnalyze(CurPlayer, CurNpc);
 			npc.GetComponent<Monster>().SetTransition(Transition.Falling);
@@ -284,7 +286,7 @@ public class BattleRunState : FiniteStateMachineSystem
 
 		int CurHealth = npc.GetComponent<Monster>().HP;
 
-		if(CurHealth < npc.GetComponent<Monster>().RetreatHealth)
+		if(CurHealth < npc.GetComponent<Monster>().retreatHealth)
 		{
 			npc.GetComponent<Monster>().SetTransition(Transition.LowHealth);
 			Debug.Log ("Run.reason.lowhealth");
@@ -307,10 +309,6 @@ public class BattleRunState : FiniteStateMachineSystem
 			agent.SetDestination (player.transform.position);
 			anim.SetBool ("run", true);
 			Debug.Log ("Run.act");
-			
-
-
-
 		//lol.StartCoroutine (FollowTarget (player));
 		/*if (runspeed <= 0) {
 			Vector3 previousTargetPos = new Vector3 (float.PositiveInfinity, float.PositiveInfinity);
@@ -444,14 +442,14 @@ public class BattleBeatenState : FiniteStateMachineSystem
 	public override void Reason(GameObject player, GameObject npc)
 	{
 		int CurHealth = npc.GetComponent<Monster>().HP;
-		int ThreadHealth = npc.GetComponent<Monster>().RetreatHealth;
+		int ThreadHealth = npc.GetComponent<Monster>().retreatHealth;
 		float dist = Vector3.Distance (player.transform.position, npc.transform.position);
 
 
 		if(anim.GetCurrentAnimatorStateInfo(0).IsName("creature1GetHit") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8)
 		{
 			rand = Random.Range (1, 2);
-			if(rand == 1 && (CurHealth >= ThreadHealth) && dist < npc.GetComponent<Monster> ().AttackDistance )
+			if(rand == 1 && (CurHealth >= ThreadHealth) && dist < npc.GetComponent<Monster> ().attackDistance )
 			{
 				npc.GetComponent<Monster>().SetTransition(Transition.FlyBack);
 				anim.SetTrigger("flyback");
@@ -459,7 +457,7 @@ public class BattleBeatenState : FiniteStateMachineSystem
 				return;
 			}
 
-			if(CurHealth >= ThreadHealth && dist <= npc.GetComponent<Monster> ().AttackDistance)
+			if(CurHealth >= ThreadHealth && dist <= npc.GetComponent<Monster> ().attackDistance)
 			{
 				MDPQstate.EndState.StateAnalyze(CurPlayer, CurNpc);
 				anim.SetTrigger("beatenrecover");
@@ -476,20 +474,20 @@ public class BattleBeatenState : FiniteStateMachineSystem
 				return;
 			}
 
-			if ( CurHealth >= 100 && dist > npc.GetComponent<Monster> ().AttackDistance && canSee == true) {
+			if ( CurHealth >= 100 && dist > npc.GetComponent<Monster> ().attackDistance && canSee == true) {
 				anim.SetTrigger("notice");
 				npc.GetComponent<Monster>().SetTransition(Transition.SawPlayer);
 				Debug.Log ("beaten.reason.sawplayer");
 				canSee = false;
 				return;
 			}
-			if(dist > npc.GetComponent<Monster> ().FireBallDistance){
+			if(dist > npc.GetComponent<Monster> ().fireBallDistance){
 				anim.SetTrigger ("follow");
 				npc.GetComponent<Monster>().SetTransition(Transition.FarAway);
 				return;
 			}
 			//if (anim.GetBool ("Attack") == false){
-			if (CurHealth >= ThreadHealth && dist > npc.GetComponent<Monster> ().AttackDistance && dist <= npc.GetComponent<Monster> ().FireBallDistance) {
+			if (CurHealth >= ThreadHealth && dist > npc.GetComponent<Monster> ().attackDistance && dist <= npc.GetComponent<Monster> ().fireBallDistance) {
 				MDPQstate.EndState.StateAnalyze (CurPlayer, CurNpc);
 				anim.SetTrigger ("beatenrecovera");
 				npc.GetComponent<Monster> ().SetTransition (Transition.Falling);
@@ -553,7 +551,7 @@ public class BattleFlyBackState : FiniteStateMachineSystem
 		{
 			float dist = Vector3.Distance(player.transform.position, npc.transform.position);
 
-			if(dist < npc.GetComponent<Monster>().AttackDistance)
+			if(dist < npc.GetComponent<Monster>().attackDistance)
 			{
 				MDPQstate.EndState.StateAnalyze(CurPlayer, CurNpc);
 				npc.GetComponent<Monster>().SetTransition(Transition.Attack);
@@ -561,7 +559,7 @@ public class BattleFlyBackState : FiniteStateMachineSystem
 				return;
 			}
 
-			if(dist > npc.GetComponent<Monster>().AttackDistance && dist < npc.GetComponent<Monster>().FireBallDistance)
+			if(dist > npc.GetComponent<Monster>().attackDistance && dist < npc.GetComponent<Monster>().fireBallDistance)
 			{
 				MDPQstate.EndState.StateAnalyze(CurPlayer, CurNpc);
 				npc.GetComponent<Monster>().SetTransition(Transition.Falling);
@@ -569,7 +567,7 @@ public class BattleFlyBackState : FiniteStateMachineSystem
 				return;
 			}
 
-			if(dist > npc.GetComponent<Monster>().FireBallDistance)
+			if(dist > npc.GetComponent<Monster>().fireBallDistance)
 			{
 				npc.GetComponent<Monster>().SetTransition(Transition.FarAway);
 				Debug.Log ("flyback.reason.faraway");
@@ -660,21 +658,21 @@ public class BattleFireballState : FiniteStateMachineSystem
 
 		if(anim.GetCurrentAnimatorStateInfo(0).IsName("creature1Attack1") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0 && Fire == false)
 		{
-			if(CurHealth > npc.GetComponent<Monster>().RetreatHealth && dist < npc.GetComponent<Monster>().AttackDistance)
+			if(CurHealth > npc.GetComponent<Monster>().retreatHealth && dist < npc.GetComponent<Monster>().attackDistance)
 			{
 				npc.GetComponent<Monster>().SetTransition(Transition.Attack);
 				Debug.Log ("fireball.reason.attack");
 				return;
 			}
 
-			if(CurHealth > npc.GetComponent<Monster>().RetreatHealth && dist > npc.GetComponent<Monster>().AttackDistance && dist <= npc.GetComponent<Monster>().FireBallDistance)
+			if(CurHealth > npc.GetComponent<Monster>().retreatHealth && dist > npc.GetComponent<Monster>().attackDistance && dist <= npc.GetComponent<Monster>().fireBallDistance)
 			{
 				npc.GetComponent<Monster>().SetTransition(Transition.Falling);
 				Debug.Log ("fireball.reason.falling");
 				return;
 			}
 
-			if(CurHealth > npc.GetComponent<Monster>().RetreatHealth && dist > npc.GetComponent<Monster>().FireBallDistance)
+			if(CurHealth > npc.GetComponent<Monster>().retreatHealth && dist > npc.GetComponent<Monster>().fireBallDistance)
 			{
 				npc.GetComponent<Monster>().SetTransition(Transition.FarAway);
 				Debug.Log ("fireball.reason.faraway");
@@ -682,7 +680,7 @@ public class BattleFireballState : FiniteStateMachineSystem
 			}
 		}
 
-		if(CurHealth < npc.GetComponent<Monster>().RetreatHealth)
+		if(CurHealth < npc.GetComponent<Monster>().retreatHealth)
 		{
 			npc.GetComponent<Monster>().SetTransition(Transition.LowHealth);
 			return;
@@ -726,7 +724,7 @@ public class BattleFireballState : FiniteStateMachineSystem
 			{
 				
 				//Debug.Log("fireBall");
-				Object.Instantiate(npc.GetComponent<Monster>().FireBall, npc.GetComponent<Monster>().fireballSpawn.transform.position, npc.transform.rotation);
+				Object.Instantiate(npc.GetComponent<Monster>().fireBall, npc.GetComponent<Monster>().fireballSpawn.transform.position, npc.transform.rotation);
 				Fire = false;
 
 				NextFireTime = Time.time + FireRate;
@@ -751,77 +749,84 @@ public class BattleFireballState : FiniteStateMachineSystem
 	//}
 }
 
-public class DieState : FiniteStateMachineSystem {
+    public class DieState : FiniteStateMachineSystem
+    {
 
-	MonoBehaviour lol;
-	private Animator anim;
-	UnityEngine.AI.NavMeshAgent agent;
-	GameObject score;
-	GameObject[] weapons;
-	public bool dying= false;
+        MonoBehaviour lol;
+        private Animator anim;
+        UnityEngine.AI.NavMeshAgent agent;
+        GameObject score;
+        GameObject[] weapons;
+        public bool dying = false;
 
-	Monster mon;
-	AudioSource audioo;
-	bool diesound;
+        Monster mon;
+        AudioSource audioo;
+        bool diesound;
 
-	public DieState(GameObject player, GameObject npc)
-	{
-		
-		mon = npc.GetComponent<Monster> ();	
-		audioo = npc.GetComponent<AudioSource> ();	
-		weapons = GameObject.FindGameObjectsWithTag ("Gun");
-		score = GameObject.Find ("GameControl");
-		stateID = StateID.Die;
-		MDPQstate =  new QState(Action.Die);
-		anim = npc.GetComponent<Animator>();
-		agent = npc.GetComponent<UnityEngine.AI.NavMeshAgent> ();
-		lol = npc.GetComponent<MonoBehaviour> ();
-	}
-	public override void DoBeforeEntering()
-	{
+        public DieState(GameObject player, GameObject npc)
+        {
 
-		diesound = true;
-		score.GetComponent<GameControl> ().score -= 1;
-		//Debug.Log ("lalalalalalalalalalaal");
-		agent.ResetPath ();
-		anim.SetBool ("Die", true);
-	}
+            mon = npc.GetComponent<Monster>();
+            audioo = npc.GetComponent<AudioSource>();
+            weapons = GameObject.FindGameObjectsWithTag("Gun");
+            score = GameObject.Find("GameControl");
+            stateID = StateID.Die;
+            MDPQstate = new QState(Action.Die);
+            anim = npc.GetComponent<Animator>();
+            agent = npc.GetComponent<UnityEngine.AI.NavMeshAgent>();
+            lol = npc.GetComponent<MonoBehaviour>();
+        }
+        public override void DoBeforeEntering()
+        {
 
-
-	public override void Reason(GameObject player, GameObject npc){
-
-	}
-
-	public override void Act(GameObject player, GameObject npc)
-	{
-
-		if (diesound) {
-			audioo.clip = mon.dieSounds;
-			lol.StartCoroutine (Wait ());
-			diesound = false;
-		}
-		dying = true;
-
-		if(npc.GetComponent<Animator> ().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && npc.GetComponent<Animator> ().GetCurrentAnimatorStateInfo(0).IsName("creature1Die")){
-			Debug.Log ("trolololo");
-			MonoBehaviour.Destroy (npc);
-		}
+            diesound = true;
+            score.GetComponent<GameControl>().score -= 1;
+            //Debug.Log ("lalalalalalalalalalaal");
+            agent.ResetPath();
+            anim.SetBool("Die", true);
+        }
 
 
-		//lol.StartCoroutine (DieNow(npc));
-	}
-	/*private IEnumerator DieNow(GameObject npc){
-		Debug.Log ("omomomomm");
-		yield return new WaitForSeconds (5);
-		MonoBehaviour.Destroy (npc);
-		lol.StopCoroutine (DieNow (npc));
+        public override void Reason(GameObject player, GameObject npc)
+        {
 
-	}*/
-	IEnumerator Wait(){
-		if (audioo.isPlaying == false) {
-			audioo.Play ();
-			if (audioo.clip != null)
-				yield return new WaitForSeconds (audioo.clip.length);
-		}
-	}
+        }
+
+        public override void Act(GameObject player, GameObject npc)
+        {
+
+            if (diesound)
+            {
+                audioo.clip = mon.dieSounds;
+                lol.StartCoroutine(Wait());
+                diesound = false;
+            }
+            dying = true;
+
+            if (npc.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && npc.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("creature1Die"))
+            {
+                Debug.Log("trolololo");
+                MonoBehaviour.Destroy(npc);
+            }
+
+
+            //lol.StartCoroutine (DieNow(npc));
+        }
+        /*private IEnumerator DieNow(GameObject npc){
+            Debug.Log ("omomomomm");
+            yield return new WaitForSeconds (5);
+            MonoBehaviour.Destroy (npc);
+            lol.StopCoroutine (DieNow (npc));
+
+        }*/
+        IEnumerator Wait()
+        {
+            if (audioo.isPlaying == false)
+            {
+                audioo.Play();
+                if (audioo.clip != null)
+                    yield return new WaitForSeconds(audioo.clip.length);
+            }
+        }
+    }
 }
