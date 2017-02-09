@@ -1,0 +1,106 @@
+/*  							NOTATKI
+ *
+ *
+ *
+		(http://staff.elka.pw.edu.pl/~pcichosz/um/wyklad/wyklad12/wyklad12.html    < wzory, schematy i inne matematyczne pierdy RL>)
+		
+				PROCES DECYZYJNY MARKOWA
+MDP = <X, A, q(phi), a(delta)> (doœwiadczenie)
+X = skoñczony zbiór stanów
+A = skoñczony zbiór akcji
+q = funkcja nagrody(na wyjœcie: zmienna losowa (r) oznaczaj¹ca nagrodê otrzymywan¹ po wykonaniu akcji a  w stanie x)
+a = funkcja przejœcia stanów(na wyjœcie: zmienna losowa oznaczaj¹ca nastêpny stan po wykonaniu akcji a w stanie x)(strategia)
+
+W³asnoœæ Markowa :
+q i a nie zale¿¹ od historii. W ka¿dym kroku nagroda i nastêpny stan zale¿¹ (probabilistycznie) tylko od aktualnego stanu i akcji.
+
+Uczenie nieindukcyjne. Brak du¿ej liczby przyk³adów, brak nadzoru, brak uczenia wiedzy deklaratywnej.
+Uczenie siê wiedzy proceduralnej(umiejêtnoœci?). 
+
+
+STRATEGIA - wybieranie akcji
+Strategia optymalna - ka¿da strategia, dla której nie istnieje strategia od niej lepsza.(ka¿da strategia maksymalizuj¹ca wartoœæ ka¿dego stanu.)
+strategia zach³anna - null;
+
+
+Podstaw¹ uczenia siê ze wzmocnieniem jest uczenie siê funkcji wartoœci lub funkcji wartoœci akcji BEZ ZNAJOMOŒCI ŒRODOWISKA. 
+Wiêkszoœæ wykorzystywanych w tym celu algorytmów opiera siê na METODACH RÓ¯NIC CZASOWYCH (temporal differences, TD).
+<na koñcu pliku>
+ALGORYTM TD<podstawa uczenia strategii, inne algorytmy s¹ rozbudowanie tego>
+
+
+------> UCZENIE SIE STRATEGII<------------
+Celem uczenia siê ze wzmocnieniem jest nauczenie siê strategii optymalnej (lub strategii dobrze przybli¿aj¹cej strategiê optymaln¹), 
+zaœ uczenie siê funkcji wartoœci mo¿e byæ jedynie œrodkiem do tego celu. 
+
+ALGORYTMY:
+AHC - null (podobno rzadko u¿ywany, trudniejszy do zrozumienia teoretycznie niz q-learning. nie czytam);
+
+
+Q-LEARNING
+- uczy siê optymalnej funkcji wartoœci akcji, tak aby móc uzyskaæ strategiê optymaln¹ jako zach³ann¹ wzglêdem niej.
+ tablica 2 < http://staff.elka.pw.edu.pl/~pcichosz/um/wyklad/wyklad13/wyklad13.html> 
+
+Wartoœci Q wyznaczaj¹ oczywiœcie poœrednio strategiê (zach³ann¹), 
+jednak w przeciwieñstwie do algorytmu AHC dla procesu uczenia siê nie wymaga siê,
+aby akcje by³y w kolejnych krokach wybierane zgodnie z t¹ strategi¹ (choæby w sensie zgodnoœci probabilistycznej), 
+w zwi¹zku z czym Q-learning nale¿y do kategorii algorytmów OFF-POLICY (mo¿e pos³ugiwaæ siê inn¹ strategi¹, ni¿ ta, której siê uczy). 
+<MONTE-CARLO poczytac>
+
+
+w ka¿dej chwili w ka¿dym stanie ka¿da akcja mo¿e zostaæ wybrana do wykonania z pewnym niezerowym prawdopodobieñstwem 
+(inaczej mówi¹c, w ka¿dym stanie ka¿da akcja bêdzie wykonana nieskoñczenie wiele razy, jeœli algorytm dzia³a nieskoñczenie d³ugo).
+
+Dostateczna eksploracja jest jednym z warunków zbie¿noœci algorytmu Q-learning.
+
+WYBÓR AKCJI
+
+Eksploracja a eksploatacja - wymiana miêdzy dzia³aniem w celu pozyskania wiedzy a dzia³aniem w celu pozyskania nagród. 
+Jest oczywiste, ¿e oczekujemy od ucznia poprawy dzia³ania (czyli zwiêkszania dochodów) w trakcie uczenia siê, a wiêc eksploatacji. 
+Z drugiej strony, jeœli jego aktualna strategia nie jest optymalna, to musi on poznaæ (i doceniæ) efekty innych akcji, ni¿ wynikaj¹ce z tej strategii, a wiêc eksplorowaæ. 
+
+-strategia zach³anna-null
+-strategia oparta na rozkladzie boltzmanna - null
+-strategie licznikowe - null;
+
+ALGORYTM UCB
+<https://jeremykun.com/2013/10/28/optimism-in-the-face-of-uncertainty-the-ucb1-algorithm/>
+
+UCB korzysta z badañ nad problemem z teorii gier – MAB (ang. Multi-Armed Bandit). W problemie
+MAB rozwa¿a siê maszynê hazardow¹ wyposa¿on¹ w N ramion. W ka¿dym kroku, gracz
+mo¿e wybraæ jedno z N ramion urz¹dzenia. Celem gracza jest maksymalizacja nagrody. 
+
+
+REPREZENTACJA FUNKCJI; NULL
+
+
+--------------------------------------------(info bonusowe)----------------------------------------------------------------------------------
+PROGRAMOWANIE DYNAMICZNE(Bellman)	
+Dla dowolnego procesu decyzyjnego Markowa istnieje przynajmniej jedna (stacjonarna, deterministyczna) strategia optymalna. 
+Ka¿dej strategii optymalnej odpowiada ta sama optymalna funkcja wartoœci i optymalna funkcja wartoœci akcji. 
+Metody programowania dynamicznego pozwalaj¹ na wyznaczenie dowolnej z tych funkcji pod warunkiem znajomoœci  funkcji przejœcia i wzmocnienia.
+
+Wartoœciowanie strategii(równianie Bellmana. Tablica 4, 5)
+
+
+wyznaczanie strategi optymalnej
+
+Istniej¹ dwa warianty metod programowania dynamicznego do wyznaczania strategii optymalnych. 
+Pierwszy z nich, nazywany iteracj¹ strategii, generuje ci¹g strategii, w którym ka¿da kolejna strategia jest lepsza od nastêpnej (lub obie s¹ optymalne). 
+Drugi, nazywany iteracj¹ wartoœci, oblicza optymaln¹ funkcjê wartoœci (lub wartoœci akcji) za pomoc¹ stosowania równania optymalnoœci Bellmana jako regu³y aktualizacji.
+(tablica 6,7)
+
+porównanie uczenie ze wzmocnieniem a programowanie dynamiczne (str 27)
+
+-dynamiczne - wymagana znajomoœæ funcji przejœcia, RL- funkcja przejscia jest nieznana, wykorzystuje faktycznie zaobserwowane nagrody i przejœcia stanów.
+-programowanie dynamiczne opiera siê na wyczerpuj¹cym przegl¹daniu ca³ej przestrzeni stanów i akcji, podczas uczenie siê ze wzmocnieniem wykorzystuje faktyczne trajektorie,
+-programowanie dynamiczne prowadzi do obliczenia pe³nej strategii optymalnej, 
+podczas gdy uczenie siê ze wzmocnieniem ma w gruncie rzeczy na celu dzia³anie (w przybli¿eniu) optymalne, 
+które mo¿e byæ oparte na czêœciowej strategii (nie jest konieczne nauczenie siê optymalnej strategii dla stanów, które nie wystêpuj¹ w trakcie faktycznego dzia³ania ucznia).
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+*/
