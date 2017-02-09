@@ -8,16 +8,16 @@ namespace Scripts.FirstLevel
 {
     public class GameControl : MonoBehaviour
     {
-
+        private string screenResolution;
         public int rand, resX, resY, score, dieCount;
-        AudioSource audioo;
+        
         public bool canAudio = false, boom, canfireball = true;
         public AudioClip[] sounds;
-        public float time = 2;
-        GameObject menu, options, lightt, playerr, gameovermenu, scoregameobject, daycycle, music, monsterCount;
-        Animator anim, animOptions, animGameOver;
+        public float time = 2f;
         public GameObject[] audioOptions, graphicOptions, monsters, weapons, spawnPoints, monstersinScene, sparks;
-        public string aaa;
+        GameObject menu, options, lightt, playerr, gameovermenu, scoregameobject, daycycle, music, monsterCount;
+        private Animator anim, animOptions, animGameOver;
+        private AudioSource audioo;
         List<string> graphicgenerics = new List<string>();
         List<string> qualitysettings = new List<string>() { "High", "Medium", "Low" };
         List<string> antyaliasing = new List<string>() { "8x AA", "4x AA", "2x AA", "No AA" };
@@ -36,8 +36,8 @@ namespace Scripts.FirstLevel
             scoregameobject = GameObject.Find("Scoretext");
             playerr = GameObject.Find("FPSController");
             Cursor.visible = false;
-            aaa = Screen.currentResolution.width + "x" + Screen.currentResolution.height;
-            graphicgenerics.Add(aaa);
+            screenResolution = Screen.currentResolution.width + "x" + Screen.currentResolution.height;
+            graphicgenerics.Add(screenResolution);
             graphicgenerics.Add("1024x768");
             graphicgenerics.Add("800x600");
             graphicgenerics.Add("640x480");
@@ -55,7 +55,7 @@ namespace Scripts.FirstLevel
             graphicOptions[7].GetComponent<Dropdown>().AddOptions(refreshrate);
         }
 
-        // Update is called once per frame
+
         void Update()
         {
             Cursor.lockState = CursorLockMode.None;
